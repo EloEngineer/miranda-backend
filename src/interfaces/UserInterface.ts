@@ -5,7 +5,7 @@ export interface IUser {
   Description: string;
   Status: string;
   Password: string;
-  StartDate: string; // Updated from 'start_date'
+  StartDate: string;
   Contact: string;
   IMG: string;
 }
