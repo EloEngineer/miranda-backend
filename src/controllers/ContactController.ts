@@ -1,48 +1,57 @@
 import { Request, Response } from "express";
-import rooms from "../repositories/rooms";
-import { IRoom } from "../interfaces/RoomInterface";
+import contact from "../repositories/contact";
+import { IContact } from "../interfaces/ContactInterface";
 
-const getRooms = (_: Request, res: Response) => {
+const getContacts = (_: Request, res: Response) => {
   try {
-    return res.send(rooms.getAll());
+    return res.send(contact.getAll());
   } catch (err: any) {
     return res.sendStatus(500);
   }
 };
 
-const getRoomById = (req: Request<{ id: string }, IRoom>, res: Response) => {
-  try {
-    return res.send(rooms.getOne(Number(req.params.id)));
-  } catch (err: any) {
-    return res.status(err.status ?? 500).send(err.message);
-  }
-};
-
-const createRoom = (req: Request<{}, IRoom, IRoom>, res: Response) => {
-  try {
-    return res.status(200).send(rooms.create(req.body));
-  } catch (err: any) {
-    return res.status(err.status ?? 500).send(err.message);
-  }
-};
-
-const updateRoom = (
-  req: Request<{ id: string }, IRoom, IRoom>,
+const getContactById = (
+  req: Request<{ id: string }, IContact>,
   res: Response
 ) => {
   try {
-    return res.send(rooms.update(Number(req.params.id), req.body));
+    return res.send(contact.getOne(String(req.params.id)));
   } catch (err: any) {
     return res.status(err.status ?? 500).send(err.message);
   }
 };
 
-const deleteRoom = (req: Request<{ id: string }, string>, res: Response) => {
+const createContact = (req: Request<{}, IContact, IContact>, res: Response) => {
   try {
-    return res.send(rooms.delete(Number(req.params.id)));
+    return res.status(200).send(contact.create(req.body));
   } catch (err: any) {
     return res.status(err.status ?? 500).send(err.message);
   }
 };
 
-export { getRooms, getRoomById, createRoom, updateRoom, deleteRoom };
+const updateContact = (
+  req: Request<{ id: string }, IContact, IContact>,
+  res: Response
+) => {
+  try {
+    return res.send(contact.update({ ...req.body, OrderID: req.params.id }));
+  } catch (err: any) {
+    return res.status(err.status ?? 500).send(err.message);
+  }
+};
+
+const deleteContact = (req: Request<{ id: string }, string>, res: Response) => {
+  try {
+    return res.send(contact.delete(String(req.params.id)));
+  } catch (err: any) {
+    return res.status(err.status ?? 500).send(err.message);
+  }
+};
+
+export {
+  getContacts,
+  getContactById,
+  createContact,
+  updateContact,
+  deleteContact,
+};

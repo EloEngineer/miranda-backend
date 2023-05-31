@@ -12,7 +12,7 @@
   },
   {
     "Date": "2023-04-29T10:30:00",
-    "Order ID": "ORD2",
+    "OrderID": "ORD2",
     "Customer": "Jane Smith",
     "Mail": "jane.smith@example.com",
     "Telephone": "555-987-654",
@@ -34,7 +34,7 @@
   },
   {
     "Date": "2023-05-01T14:45:00",
-    "Order ID": "ORD4",
+    "OrderID": "ORD4",
     "Customer": "Bob Green",
     "Mail": "bob.green@example.com",
     "Telephone": "555-321-654",
