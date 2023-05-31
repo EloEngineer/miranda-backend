@@ -2,47 +2,58 @@ import { Request, Response } from "express";
 import booking from "../repositories/booking";
 import { IBooking } from "../interfaces/BookingInterface";
 
-const getBookings = (_: Request, res: Response) => {
+const getBookings = async (_: Request, res: Response) => {
   try {
-    return res.send(booking.getAll());
+    const allBookings = await booking.getAll();
+    return res.send(allBookings);
   } catch (err: any) {
     return res.sendStatus(500);
   }
 };
 
-const getBookingById = (
+const getBookingById = async (
   req: Request<{ id: string }, IBooking>,
   res: Response
 ) => {
   try {
-    return res.send(booking.getOne(req.params.id));
+    const bookingItem = await booking.getOne(req.params.id);
+    return res.send(bookingItem);
   } catch (err: any) {
     return res.status(err.status ?? 500).send(err.message);
   }
 };
 
-const createBooking = (req: Request<{}, IBooking, IBooking>, res: Response) => {
+const createBooking = async (
+  req: Request<{}, IBooking, IBooking>,
+  res: Response
+) => {
   try {
-    return res.status(200).send(booking.create(req.body));
+    const newBooking = await booking.create(req.body);
+    return res.status(200).send(newBooking);
   } catch (err: any) {
     return res.status(err.status ?? 500).send(err.message);
   }
 };
 
-const updateBooking = (
+const updateBooking = async (
   req: Request<{ id: string }, IBooking, IBooking>,
   res: Response
 ) => {
   try {
-    return res.send(booking.update(req.params.id, req.body));
+    const updatedBooking = await booking.update(req.params.id, req.body);
+    return res.send(updatedBooking);
   } catch (err: any) {
     return res.status(err.status ?? 500).send(err.message);
   }
 };
 
-const deleteBooking = (req: Request<{ id: string }, string>, res: Response) => {
+const deleteBooking = async (
+  req: Request<{ id: string }, string>,
+  res: Response
+) => {
   try {
-    return res.send(booking.delete(req.params.id));
+    const deletedBookingMsg = await booking.delete(req.params.id);
+    return res.send(deletedBookingMsg);
   } catch (err: any) {
     return res.status(err.status ?? 500).send(err.message);
   }
