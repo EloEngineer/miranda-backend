@@ -2,44 +2,58 @@ import { Request, Response } from "express";
 import users from "../repositories/users";
 import { IUser } from "../interfaces/UserInterface";
 
-const getUsers = (_: Request, res: Response) => {
+const getUsers = async (_: Request, res: Response) => {
   try {
-    return res.send(users.getAll());
+    const allUsers = await users.getAll();
+    return res.send(allUsers);
   } catch (err: any) {
     return res.sendStatus(500);
   }
 };
 
-const getUserById = (req: Request<{ id: string }, IUser>, res: Response) => {
+const getUserById = async (
+  req: Request<{ id: string }, IUser>,
+  res: Response
+) => {
   try {
-    return res.send(users.getOne(Number(req.params.id)));
+    const user = await users.getOne(Number(req.params.id));
+    return res.send(user);
   } catch (err: any) {
     return res.status(err.status ?? 500).send(err.message);
   }
 };
 
-const createUser = (req: Request<{}, IUser, IUser>, res: Response) => {
+const createUser = async (req: Request<{}, IUser, IUser>, res: Response) => {
   try {
-    return res.status(200).send(users.create(req.body));
+    const newUser = await users.create(req.body);
+    return res.status(200).send(newUser);
   } catch (err: any) {
     return res.status(err.status ?? 500).send(err.message);
   }
 };
 
-const updateUser = (
+const updateUser = async (
   req: Request<{ id: string }, IUser, IUser>,
   res: Response
 ) => {
   try {
-    return res.send(users.update({ ...req.body, ID: Number(req.params.id) }));
+    const updatedUser = await users.update({
+      ...req.body,
+      ID: Number(req.params.id),
+    });
+    return res.send(updatedUser);
   } catch (err: any) {
     return res.status(err.status ?? 500).send(err.message);
   }
 };
 
-const deleteUser = (req: Request<{ id: string }, string>, res: Response) => {
+const deleteUser = async (
+  req: Request<{ id: string }, string>,
+  res: Response
+) => {
   try {
-    return res.send(users.delete(Number(req.params.id)));
+    const deletedUserMsg = await users.delete(Number(req.params.id));
+    return res.send(deletedUserMsg);
   } catch (err: any) {
     return res.status(err.status ?? 500).send(err.message);
   }
