@@ -2,44 +2,55 @@ import { Request, Response } from "express";
 import rooms from "../repositories/rooms";
 import { IRoom } from "../interfaces/RoomInterface";
 
-const getRooms = (_: Request, res: Response) => {
+const getRooms = async (_: Request, res: Response) => {
   try {
-    return res.send(rooms.getAll());
+    const allRooms = await rooms.getAll();
+    return res.send(allRooms);
   } catch (err: any) {
     return res.sendStatus(500);
   }
 };
 
-const getRoomById = (req: Request<{ id: string }, IRoom>, res: Response) => {
+const getRoomById = async (
+  req: Request<{ id: string }, IRoom>,
+  res: Response
+) => {
   try {
-    return res.send(rooms.getOne(Number(req.params.id)));
+    const room = await rooms.getOne(Number(req.params.id));
+    return res.send(room);
   } catch (err: any) {
     return res.status(err.status ?? 500).send(err.message);
   }
 };
 
-const createRoom = (req: Request<{}, IRoom, IRoom>, res: Response) => {
+const createRoom = async (req: Request<{}, IRoom, IRoom>, res: Response) => {
   try {
-    return res.status(200).send(rooms.create(req.body));
+    const newRoom = await rooms.create(req.body);
+    return res.status(200).send(newRoom);
   } catch (err: any) {
     return res.status(err.status ?? 500).send(err.message);
   }
 };
 
-const updateRoom = (
+const updateRoom = async (
   req: Request<{ id: string }, IRoom, IRoom>,
   res: Response
 ) => {
   try {
-    return res.send(rooms.update(Number(req.params.id), req.body));
+    const updatedRoom = await rooms.update(Number(req.params.id), req.body);
+    return res.send(updatedRoom);
   } catch (err: any) {
     return res.status(err.status ?? 500).send(err.message);
   }
 };
 
-const deleteRoom = (req: Request<{ id: string }, string>, res: Response) => {
+const deleteRoom = async (
+  req: Request<{ id: string }, string>,
+  res: Response
+) => {
   try {
-    return res.send(rooms.delete(Number(req.params.id)));
+    const deletedRoomMsg = await rooms.delete(Number(req.params.id));
+    return res.send(deletedRoomMsg);
   } catch (err: any) {
     return res.status(err.status ?? 500).send(err.message);
   }
