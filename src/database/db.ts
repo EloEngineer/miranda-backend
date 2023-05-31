@@ -6,7 +6,7 @@ dontenv.config();
 export const pool = mysql.createPool({
   host: "localhost",
   user: "root",
-  password: "password",
+  password: "diegomiguel99",
   database: "database_miranda",
 });
 
@@ -15,7 +15,7 @@ export async function connect() {
     const connection = await mysql.createConnection({
       host: "localhost",
       user: "root",
-      password: process.env.DB_PASSWORD,
+      password: "diegomiguel99",
       database: "database_miranda",
     });
 
