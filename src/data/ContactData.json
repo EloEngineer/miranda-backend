@@ -1,6 +1,6 @@
 [
   {
-    "Order ID": "ORD1",
+    "OrderID": "ORD1",
     "Date": "2023-04-28T15:00:00",
     "Customer": "John Doe",
     "Mail": "john.doe@example.com",
@@ -23,7 +23,7 @@
   },
   {
     "Date": "2023-04-30T09:15:00",
-    "Order ID": "ORD3",
+    "OrderID": "ORD3",
     "Customer": "Alice Brown",
     "Mail": "alice.brown@example.com",
     "Telephone": "555-456-789",
@@ -45,7 +45,7 @@
   },
   {
     "Date": "2023-05-02T16:30:00",
-    "Order ID": "ORD5",
+    "OrderID": "ORD5",
     "Customer": "Carol White",
     "Mail": "carol.white@example.com",
     "Telephone": "555-789-012",
@@ -56,7 +56,7 @@
   },
   {
     "Date": "2023-05-03T11:00:00",
-    "Order ID": "ORD6",
+    "OrderID": "ORD6",
     "Customer": "David Black",
     "Mail": "david.black@example.com",
     "Telephone": "555-654-321",
