@@ -2,47 +2,61 @@ import { Request, Response } from "express";
 import contact from "../repositories/contact";
 import { IContact } from "../interfaces/ContactInterface";
 
-const getContacts = (_: Request, res: Response) => {
+const getContacts = async (_: Request, res: Response) => {
   try {
-    return res.send(contact.getAll());
+    const allContacts = await contact.getAll();
+    return res.send(allContacts);
   } catch (err: any) {
     return res.sendStatus(500);
   }
 };
 
-const getContactById = (
+const getContactById = async (
   req: Request<{ id: string }, IContact>,
   res: Response
 ) => {
   try {
-    return res.send(contact.getOne(String(req.params.id)));
+    const contactItem = await contact.getOne(String(req.params.id));
+    return res.send(contactItem);
   } catch (err: any) {
     return res.status(err.status ?? 500).send(err.message);
   }
 };
 
-const createContact = (req: Request<{}, IContact, IContact>, res: Response) => {
+const createContact = async (
+  req: Request<{}, IContact, IContact>,
+  res: Response
+) => {
   try {
-    return res.status(200).send(contact.create(req.body));
+    const newContact = await contact.create(req.body);
+    return res.status(200).send(newContact);
   } catch (err: any) {
     return res.status(err.status ?? 500).send(err.message);
   }
 };
 
-const updateContact = (
+const updateContact = async (
   req: Request<{ id: string }, IContact, IContact>,
   res: Response
 ) => {
   try {
-    return res.send(contact.update({ ...req.body, OrderID: req.params.id }));
+    const updatedContact = await contact.update({
+      ...req.body,
+      OrderID: req.params.id,
+    });
+    return res.send(updatedContact);
   } catch (err: any) {
     return res.status(err.status ?? 500).send(err.message);
   }
 };
 
-const deleteContact = (req: Request<{ id: string }, string>, res: Response) => {
+const deleteContact = async (
+  req: Request<{ id: string }, string>,
+  res: Response
+) => {
   try {
-    return res.send(contact.delete(String(req.params.id)));
+    const deletedContactMsg = await contact.delete(String(req.params.id));
+    return res.send(deletedContactMsg);
   } catch (err: any) {
     return res.status(err.status ?? 500).send(err.message);
   }
