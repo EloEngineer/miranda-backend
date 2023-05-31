@@ -10,5 +10,5 @@ export interface IBooking {
   img: string[];
   price: string;
   facilities: string[];
-  OrderID: string;
+  BookingID: string;
 }

@@ -1,57 +1,46 @@
-import fs from "fs";
+import { pool } from "../database/db";
 import { IUser } from "../interfaces/UserInterface";
-import path from "path";
+import mysql from "mysql2/promise";
 
-const users: IUser[] = JSON.parse(
-  fs.readFileSync(path.resolve(__dirname, "../data/UserData.json")).toString()
-);
-
-function saveJson() {
-  const jsonData = JSON.stringify(users, null, 2);
-  fs.writeFileSync(path.resolve(__dirname, "../data/UserData.json"), jsonData);
-}
-
-const getAll = () => users;
-
-const getOne = (id: number) => {
-  const user = users.find((user) => user.ID === id);
-  if (!user) {
-    return null;
-  }
-  return user;
+const getAll = async () => {
+  const [rows] = await pool.query("SELECT * FROM users");
+  return rows;
 };
 
-const create = (newUserInfo: IUser) => {
-  const newUser: IUser = {
-    ...newUserInfo,
-    ID: users[users.length - 1].ID + 1,
-  };
-  users.push(newUser);
-  saveJson();
-  return newUser;
+const getOne = async (id: number) => {
+  const [rows] = await pool.query<mysql.RowDataPacket[]>(
+    "SELECT * FROM users WHERE ID = ?",
+    [id]
+  );
+  return rows[0];
 };
 
-const update = (updatedUser: IUser) => {
-  const index = users.findIndex((user) => user.ID === updatedUser.ID);
-
-  if (index === -1) {
-    throw "No user found by provided ID";
-  }
-
-  users[index] = updatedUser;
-  saveJson();
-  return users[index];
+const create = async (newUserInfo: IUser) => {
+  const [result] = await pool.query<mysql.OkPacket>(
+    "INSERT INTO users SET ?",
+    newUserInfo
+  );
+  const [rows] = await pool.query<mysql.RowDataPacket[]>(
+    "SELECT * FROM users WHERE ID = ?",
+    [result.insertId]
+  );
+  return rows[0];
 };
 
-const _delete = (id: number) => {
-  const index = users.findIndex((user) => user.ID === id);
+const update = async (updatedUser: IUser) => {
+  await pool.query("UPDATE users SET ? WHERE ID = ?", [
+    updatedUser,
+    updatedUser.ID,
+  ]);
+  const [rows] = await pool.query<mysql.RowDataPacket[]>(
+    "SELECT * FROM users WHERE ID = ?",
+    [updatedUser.ID]
+  );
+  return rows[0];
+};
 
-  if (index === -1) {
-    throw "No user found by provided ID";
-  }
-
-  users.splice(index, 1);
-  saveJson();
+const _delete = async (id: number) => {
+  await pool.query("DELETE FROM users WHERE ID = ?", [id]);
   return "User Deleted";
 };
 

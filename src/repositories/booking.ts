@@ -1,49 +1,48 @@
-import fs from "fs";
-import path from "path";
+import mysql from "mysql2/promise";
+import { pool } from "../database/db";
 import { IBooking } from "../interfaces/BookingInterface";
 
-let bookings: IBooking[] = JSON.parse(
-  fs
-    .readFileSync(path.resolve(__dirname, "../data/BookingData.json"))
-    .toString()
-);
-
-function saveJson() {
-  const jsonData = JSON.stringify(bookings, null, 2);
-  fs.writeFileSync(
-    path.resolve(__dirname, "../data/BookingData.json"),
-    jsonData
+const getAll = async () => {
+  const [rows] = await pool.query<mysql.RowDataPacket[]>(
+    "SELECT * FROM bookings"
   );
-}
-
-const getAll = () => bookings;
-
-const getOne = (id: string) =>
-  bookings.find((booking) => booking.OrderID === id);
-
-const create = (newBookingData: IBooking) => {
-  const newBooking = {
-    ...newBookingData,
-    OrderID: `ORD${bookings.length + 1}`,
-  };
-  bookings.push(newBooking);
-  saveJson();
-  return newBooking;
+  return rows;
 };
 
-const update = (id: string, updatedData: any) => {
-  let booking = bookings.find((booking) => booking.OrderID === id);
-  if (!booking) {
-    throw "No booking found by provided ID";
-  }
-  booking = { ...booking, ...updatedData };
-  saveJson();
-  return booking;
+const getOne = async (id: string) => {
+  const [rows] = await pool.query<mysql.RowDataPacket[]>(
+    "SELECT * FROM bookings WHERE BookingID = ?",
+    [id]
+  );
+  return rows[0];
 };
 
-const _delete = (id: string) => {
-  bookings = bookings.filter((booking) => booking.OrderID !== id);
-  saveJson();
+const create = async (newBookingData: IBooking) => {
+  const [result] = await pool.query<mysql.OkPacket>(
+    "INSERT INTO bookings SET ?",
+    newBookingData
+  );
+  const [rows] = await pool.query<mysql.RowDataPacket[]>(
+    "SELECT * FROM bookings WHERE BookingID = ?",
+    [result.insertId]
+  );
+  return rows[0];
+};
+
+const update = async (id: string, updatedData: IBooking) => {
+  await pool.query("UPDATE bookings SET ? WHERE BookingID = ?", [
+    updatedData,
+    id,
+  ]);
+  const [rows] = await pool.query<mysql.RowDataPacket[]>(
+    "SELECT * FROM bookings WHERE BookingID = ?",
+    [id]
+  );
+  return rows[0];
+};
+
+const _delete = async (id: string) => {
+  await pool.query("DELETE FROM bookings WHERE BookingID = ?", [id]);
   return "Booking Deleted";
 };
 

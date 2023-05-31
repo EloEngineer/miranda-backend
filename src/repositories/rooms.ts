@@ -1,40 +1,43 @@
-import fs from "fs";
-import path from "path";
+import mysql from "mysql2/promise";
+import { pool } from "../database/db";
 import { IRoom } from "../interfaces/RoomInterface";
 
-let rooms: IRoom[] = JSON.parse(
-  fs.readFileSync(path.resolve(__dirname, "../data/RoomData.json")).toString()
-);
-
-function saveJson() {
-  const jsonData = JSON.stringify(rooms, null, 2);
-  fs.writeFileSync(path.resolve(__dirname, "../data/RoomData.json"), jsonData);
-}
-
-const getAll = () => rooms;
-
-const getOne = (id: number) => rooms.find((room) => room.id === id);
-
-const create = (newRoomData: IRoom) => {
-  const newRoom = { ...newRoomData, ID: rooms.length + 1 };
-  rooms.push(newRoom);
-  saveJson();
-  return newRoom;
+const getAll = async () => {
+  const [rows] = await pool.query<mysql.RowDataPacket[]>("SELECT * FROM rooms");
+  return rows;
 };
 
-const update = (id: number, updatedData: any) => {
-  let room = rooms.find((room) => room.id === id);
-  if (!room) {
-    throw "No room found by provided ID";
-  }
-  room = { ...room, ...updatedData };
-  saveJson();
-  return room;
+const getOne = async (id: number) => {
+  const [rows] = await pool.query<mysql.RowDataPacket[]>(
+    "SELECT * FROM rooms WHERE id = ?",
+    [id]
+  );
+  return rows[0];
 };
 
-const _delete = (id: number) => {
-  rooms = rooms.filter((room) => room.id !== id);
-  saveJson();
+const create = async (newRoomData: IRoom) => {
+  const [result] = await pool.query<mysql.OkPacket>(
+    "INSERT INTO rooms SET ?",
+    newRoomData
+  );
+  const [rows] = await pool.query<mysql.RowDataPacket[]>(
+    "SELECT * FROM rooms WHERE id = ?",
+    [result.insertId]
+  );
+  return rows[0];
+};
+
+const update = async (id: number, updatedData: IRoom) => {
+  await pool.query("UPDATE rooms SET ? WHERE id = ?", [updatedData, id]);
+  const [rows] = await pool.query<mysql.RowDataPacket[]>(
+    "SELECT * FROM rooms WHERE id = ?",
+    [id]
+  );
+  return rows[0];
+};
+
+const _delete = async (id: number) => {
+  await pool.query("DELETE FROM rooms WHERE id = ?", [id]);
   return "Room Deleted";
 };
 

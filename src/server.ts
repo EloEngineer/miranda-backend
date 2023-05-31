@@ -8,6 +8,7 @@ import RoomRouter from "./routes/RoomRoute";
 import authRouter from "./controllers/LoginController";
 import passport from "passport";
 import "./services/Login";
+import { connect } from "./database/db";
 
 const app = express();
 const PORT = 3000;
@@ -39,6 +40,7 @@ app.use(
   ContactRouter
 );
 
-export default function startServer() {
+export default async function startServer() {
+  await connect();
   app.listen(PORT, () => console.log(`Server is live on port ${PORT}`));
 }

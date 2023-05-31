@@ -1,0 +1,15 @@
+[
+  {
+    "BookingID": "ORD1",
+    "Guest": "Felipe",
+    "Room": 1,
+    "CheckInDate": "2023-02-10",
+    "CheckOutDate": "2023-02-15",
+    "OrderDate": "2023-01-02",
+    "SpecialRequest": "Extra towels",
+    "RoomType": "Deluxe A",
+    "Status": "Check In",
+    "Price": 130,
+    "Facilities": "TV, AC, Double Bed, Parking Spot, WiFi, Fridge, 24 hour guard, 2 Bathroom"
+  }
+]

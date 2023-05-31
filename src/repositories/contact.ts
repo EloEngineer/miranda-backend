@@ -1,63 +1,48 @@
-import fs from "fs";
-import path from "path";
+import mysql from "mysql2/promise";
+import { pool } from "../database/db";
 import { IContact } from "../interfaces/ContactInterface";
 
-const contacts: IContact[] = JSON.parse(
-  fs
-    .readFileSync(path.resolve(__dirname, "../data/ContactData.json"))
-    .toString()
-);
-
-function saveJson() {
-  const jsonData = JSON.stringify(contacts, null, 2);
-  fs.writeFileSync(
-    path.resolve(__dirname, "../data/ContactData.json"),
-    jsonData
+const getAll = async () => {
+  const [rows] = await pool.query<mysql.RowDataPacket[]>(
+    "SELECT * FROM contacts"
   );
-}
-
-const getAll = () => contacts;
-
-const getOne = (id: string) => {
-  const contact = contacts.find((contact) => contact.OrderID === id);
-  if (!contact) {
-    return null;
-  }
-  return contact;
+  return rows;
 };
 
-const create = (newContactInfo: IContact) => {
-  const newContact: IContact = {
-    ...newContactInfo,
-  };
-  contacts.push(newContact);
-  saveJson();
-  return newContact;
-};
-
-const update = (updatedContact: IContact) => {
-  const index = contacts.findIndex(
-    (contact) => contact.OrderID === updatedContact.OrderID
+const getOne = async (id: string) => {
+  const [rows] = await pool.query<mysql.RowDataPacket[]>(
+    "SELECT * FROM contacts WHERE OrderID = ?",
+    [id]
   );
-
-  if (index === -1) {
-    throw "No contact found by provided OrderID";
-  }
-
-  contacts[index] = updatedContact;
-  saveJson();
-  return contacts[index];
+  return rows[0];
 };
 
-const _delete = (id: string) => {
-  const index = contacts.findIndex((contact) => contact.OrderID === id);
+const create = async (newContactInfo: IContact) => {
+  const [result] = await pool.query<mysql.OkPacket>(
+    "INSERT INTO contacts SET ?",
+    newContactInfo
+  );
+  const [rows] = await pool.query<mysql.RowDataPacket[]>(
+    "SELECT * FROM contacts WHERE OrderID = ?",
+    [result.insertId]
+  );
+  return rows[0];
+};
 
-  if (index === -1) {
-    throw "No contact found by provided OrderID";
-  }
+const update = async (updatedContact: IContact) => {
+  await pool.query("UPDATE contacts SET ? WHERE OrderID = ?", [
+    updatedContact,
+    updatedContact.OrderID,
+  ]);
+  const [rows] = await pool.query<mysql.RowDataPacket[]>(
+    "SELECT * FROM contacts WHERE OrderID = ?",
+    [updatedContact.OrderID]
+  );
+  return rows[0];
+};
 
-  contacts.splice(index, 1);
-  saveJson();
+const _delete = async (id: string) => {
+  await pool.query("DELETE FROM contacts WHERE OrderID = ?", [id]);
   return "Contact Deleted";
 };
 
