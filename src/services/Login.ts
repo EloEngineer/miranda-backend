@@ -5,6 +5,9 @@ import {
   ExtractJwt as ExtractJwtModule,
 } from "passport-jwt";
 import { JwtPayload } from "jsonwebtoken";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 // Local strategy for login
 passport.use(
@@ -30,7 +33,7 @@ passport.use(
 passport.use(
   new JWTStrategyModule(
     {
-      secretOrKey: "Miranda_Backend_Secret",
+      secretOrKey: process.env.LOGIN_SECRET_KEY,
       jwtFromRequest: ExtractJwtModule.fromAuthHeaderAsBearerToken(),
     },
     async (token: JwtPayload, doneCallback: DoneCallback) => {

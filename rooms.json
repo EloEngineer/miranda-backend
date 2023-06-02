@@ -1,0 +1,62 @@
+[
+  {
+    "RoomID": 1,
+    "RoomName": "Deluxe B-",
+    "Status": "Available",
+    "Offer": 31
+  },
+  {
+    "RoomID": 2,
+    "RoomName": "Deluxe A-",
+    "Status": "Available",
+    "Offer": 58
+  },
+  {
+    "RoomID": 3,
+    "RoomName": "Deluxe B-",
+    "Status": "Available",
+    "Offer": 69
+  },
+  {
+    "RoomID": 4,
+    "RoomName": "Deluxe C-",
+    "Status": "Available",
+    "Offer": 12
+  },
+  {
+    "RoomID": 5,
+    "RoomName": "Deluxe A-",
+    "Status": "Available",
+    "Offer": 90
+  },
+  {
+    "RoomID": 6,
+    "RoomName": "Deluxe C-",
+    "Status": "Available",
+    "Offer": 35
+  },
+  {
+    "RoomID": 7,
+    "RoomName": "Deluxe C-",
+    "Status": "Available",
+    "Offer": 60
+  },
+  {
+    "RoomID": 8,
+    "RoomName": "Deluxe A-",
+    "Status": "Available",
+    "Offer": 41
+  },
+  {
+    "RoomID": 9,
+    "RoomName": "Deluxe B-",
+    "Status": "Available",
+    "Offer": 6
+  },
+  {
+    "RoomID": 10,
+    "RoomName": "Deluxe B-",
+    "Status": "Available",
+    "Offer": 2
+  }
+]

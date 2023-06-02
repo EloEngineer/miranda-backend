@@ -1,0 +1,92 @@
+[
+  {
+    "BookingID": 1,
+    "RoomID": 7,
+    "CheckInDate": "2024-01-16T19:00:01.993Z",
+    "CheckOutDate": "2023-09-26T01:41:29.070Z",
+    "OrderDate": "2023-06-01T21:50:47.371Z",
+    "SpecialRequest": "Velit ab asperiores deleniti esse.",
+    "Status": "Check In"
+  },
+  {
+    "BookingID": 2,
+    "RoomID": 5,
+    "CheckInDate": "2023-08-18T18:21:48.623Z",
+    "CheckOutDate": "2023-06-05T22:20:53.746Z",
+    "OrderDate": "2023-06-01T11:21:07.540Z",
+    "SpecialRequest": "Soluta quos doloribus ex vel perspiciatis deleniti itaque accusantium.",
+    "Status": "Check In"
+  },
+  {
+    "BookingID": 3,
+    "RoomID": 8,
+    "CheckInDate": "2023-12-29T02:26:03.125Z",
+    "CheckOutDate": "2024-03-11T13:38:45.756Z",
+    "OrderDate": "2023-06-01T09:23:11.448Z",
+    "SpecialRequest": "Fugit enim illo error provident fugit possimus expedita.",
+    "Status": "Progress"
+  },
+  {
+    "BookingID": 4,
+    "RoomID": 2,
+    "CheckInDate": "2023-12-15T18:49:57.275Z",
+    "CheckOutDate": "2024-05-07T08:47:31.453Z",
+    "OrderDate": "2023-06-02T04:14:04.862Z",
+    "SpecialRequest": "Pariatur reiciendis labore illum corporis vitae repudiandae.",
+    "Status": "Check In"
+  },
+  {
+    "BookingID": 5,
+    "RoomID": 7,
+    "CheckInDate": "2023-10-13T22:20:47.102Z",
+    "CheckOutDate": "2024-05-08T09:59:43.776Z",
+    "OrderDate": "2023-06-01T07:20:49.829Z",
+    "SpecialRequest": "Maxime natus dolor quos omnis expedita earum.",
+    "Status": "Check In"
+  },
+  {
+    "BookingID": 6,
+    "RoomID": 2,
+    "CheckInDate": "2024-01-14T05:29:14.470Z",
+    "CheckOutDate": "2023-11-30T13:22:28.575Z",
+    "OrderDate": "2023-06-01T10:30:47.863Z",
+    "SpecialRequest": "Totam alias corrupti nemo.",
+    "Status": "Check In"
+  },
+  {
+    "BookingID": 7,
+    "RoomID": 6,
+    "CheckInDate": "2023-08-09T06:17:28.525Z",
+    "CheckOutDate": "2024-04-03T03:41:28.155Z",
+    "OrderDate": "2023-06-02T03:50:49.824Z",
+    "SpecialRequest": "Soluta architecto expedita assumenda aut quidem.",
+    "Status": "Check In"
+  },
+  {
+    "BookingID": 8,
+    "RoomID": 5,
+    "CheckInDate": "2023-11-06T05:14:32.962Z",
+    "CheckOutDate": "2023-06-25T02:33:44.364Z",
+    "OrderDate": "2023-06-01T15:57:24.317Z",
+    "SpecialRequest": "Deleniti rerum officiis repudiandae saepe molestiae libero facilis ipsum voluptate.",
+    "Status": "Progress"
+  },
+  {
+    "BookingID": 9,
+    "RoomID": 5,
+    "CheckInDate": "2023-10-22T01:53:14.325Z",
+    "CheckOutDate": "2024-04-23T02:14:08.960Z",
+    "OrderDate": "2023-06-01T22:49:12.746Z",
+    "SpecialRequest": "Sequi quibusdam corporis dolorem officia reprehenderit laudantium ut voluptatem.",
+    "Status": "Check In"
+  },
+  {
+    "BookingID": 10,
+    "RoomID": 2,
+    "CheckInDate": "2023-10-13T07:58:34.519Z",
+    "CheckOutDate": "2024-01-15T17:29:35.881Z",
+    "OrderDate": "2023-06-01T15:17:18.103Z",
+    "SpecialRequest": "Facilis ipsam ratione enim cupiditate.",
+    "Status": "Check In"
+  }
+]
