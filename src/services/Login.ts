@@ -6,6 +6,9 @@ import {
 } from "passport-jwt";
 import { JwtPayload } from "jsonwebtoken";
 import dotenv from "dotenv";
+import { pool } from "../database/db";
+import bcrypt from "bcrypt";
+import mysql from "mysql2/promise";
 
 dotenv.config();
 
@@ -18,10 +21,23 @@ passport.use(
     },
     async (email: string, password: string, doneCallback) => {
       try {
-        if (email === "admin@admin.com" && password === "1234") {
-          return doneCallback(null, { email: "admin@admin.com" });
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+        // Fetch the user from your database
+        const [rows] = await pool.query<mysql.RowDataPacket[]>(
+          "SELECT * FROM users WHERE Email = ? and Password = ?",
+          [email, hashedPassword]
+        );
+
+        // If user not found or password doesn't match, return with a message
+        if (!rows.length) {
+          return doneCallback(null, false, {
+            message: "Incorrect credentials",
+          });
         }
-        return doneCallback(null, false, { message: "Incorrect credentials" });
+
+        // If the credentials are correct, return the user
+        return doneCallback(null, rows[0]);
       } catch (errorObj) {
         return doneCallback(errorObj, false);
       }
