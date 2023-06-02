@@ -1,6 +1,7 @@
 import { pool } from "../database/db";
 import { IUser } from "../interfaces/UserInterface";
 import mysql from "mysql2/promise";
+import bcrypt from "bcrypt";
 
 const getAll = async () => {
   const [rows] = await pool.query("SELECT * FROM users");
@@ -16,6 +17,10 @@ const getOne = async (id: number) => {
 };
 
 const create = async (newUserInfo: IUser) => {
+  const saltRounds = 10;
+  const hashedPassword = await bcrypt.hash(newUserInfo.Password, saltRounds);
+  newUserInfo.Password = hashedPassword;
+
   const [result] = await pool.query<mysql.OkPacket>(
     "INSERT INTO users SET ?",
     newUserInfo
