@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import contact from "../repositories/contact";
-import { IContact } from "../interfaces/ContactInterface";
+import { IContact } from "../interfaces/ContactSchema";
 
 const getContacts = async (_: Request, res: Response) => {
   try {

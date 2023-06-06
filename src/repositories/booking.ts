@@ -1,6 +1,6 @@
 import mysql from "mysql2/promise";
 import { pool } from "../database/db";
-import { IBooking } from "../interfaces/BookingInterface";
+import { IBooking } from "../interfaces/BookingSchema";
 
 const getAll = async () => {
   const [rows] = await pool.query<mysql.RowDataPacket[]>(

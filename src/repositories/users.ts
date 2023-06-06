@@ -1,5 +1,5 @@
 import { pool } from "../database/db";
-import { IUser } from "../interfaces/UserInterface";
+import { IUser } from "../interfaces/UserSchema";
 import mysql from "mysql2/promise";
 import bcrypt from "bcrypt";
 
