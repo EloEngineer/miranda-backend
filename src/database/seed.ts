@@ -1,6 +1,11 @@
 import fs from "fs";
-import { pool } from "./db";
+import { connection } from "./db";
+import mongoose from "mongoose";
 import { faker } from "@faker-js/faker";
+import User from "../models/UserSchema";
+import Room from "../models/RoomSchema";
+import Booking from "../models/BookingSchema";
+import Contact from "../models/ContactSchema";
 
 const generateFakeData = (amount: number, type: string) => {
   const data = [];
@@ -69,69 +74,37 @@ const writeDataToJsonFile = (data: object, filename: string) => {
 };
 
 const main = async () => {
+  //Connect to MongoDB
+  connection();
+
   const entities = ["users", "rooms", "bookings", "contacts"];
 
   for (let entity of entities) {
     const data = generateFakeData(100, entity);
-    writeDataToJsonFile(data, `${entity}.json`);
-    await pool.query(`DROP TABLE IF EXISTS ${entity}`);
-    let createTableSql = "";
+    let Model!: typeof User | typeof Room | typeof Booking | typeof Contact;
+
     switch (entity) {
       case "users":
-        createTableSql = `CREATE TABLE users(
-            ID INT AUTO_INCREMENT PRIMARY KEY,
-            Name VARCHAR(255) NOT NULL,
-            Email VARCHAR(255) NOT NULL,
-            StartDate DATE,
-            Description TEXT,
-            Contact VARCHAR(50),
-            Status ENUM('Active', 'Inactive'),
-            Password VARCHAR(255),
-            IMG TEXT
-        )`;
+        Model = User;
         break;
-
       case "rooms":
-        createTableSql = `CREATE TABLE rooms(
-            RoomID INT AUTO_INCREMENT PRIMARY KEY,
-            RoomName ENUM('Deluxe A-', 'Deluxe B-', 'Deluxe C-', 'Deluxe D-'),
-            Status ENUM('Available', 'Unavailable'),
-            Offer INT
-        )`;
+        Model = Room;
         break;
       case "bookings":
-        createTableSql = `CREATE TABLE bookings(
-            BookingID VARCHAR(255) PRIMARY KEY,
-            Guest INT,
-            RoomID INT,
-            CheckInDate DATE,
-            CheckOutDate DATE,
-            OrderDate VARCHAR(255),
-            SpecialRequest TEXT,
-            RoomType VARCHAR(255),
-            Status ENUM('Check In', 'Progress' ,'Check Out'),
-            FOREIGN KEY (RoomID) REFERENCES rooms(RoomID)
-        )`;
+        Model = Booking;
         break;
       case "contacts":
-        createTableSql = `CREATE TABLE contacts(
-            OrderID VARCHAR(255) PRIMARY KEY,
-            Date DATETIME,
-            Customer VARCHAR(255),
-            Mail VARCHAR(255),
-            Telephone VARCHAR(20),
-            Comment TEXT,
-            Asunto VARCHAR(255),
-            Action ENUM('Archive', 'Unarchive'),
-            IMG TEXT
-        )`;
+        Model = Contact;
         break;
     }
-    await pool.query(createTableSql);
+
     for (let item of data) {
-      await pool.query(`INSERT INTO ${entity} SET ?`, item);
+      const instance = new Model(item);
+      await instance.save(); // This will save the instance to the MongoDB collection associated with the Model
     }
   }
+
+  mongoose.connection.close(); // close the connection after we're done
 };
 
 main();

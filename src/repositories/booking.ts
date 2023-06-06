@@ -1,48 +1,26 @@
-import mysql from "mysql2/promise";
-import { pool } from "../database/db";
-import { IBooking } from "../interfaces/BookingSchema";
+import { IBooking } from "../models/interfaces";
+import Booking from "../models/BookingSchema";
 
 const getAll = async () => {
-  const [rows] = await pool.query<mysql.RowDataPacket[]>(
-    "SELECT * FROM bookings"
-  );
-  return rows;
+  return await Booking.find();
 };
 
 const getOne = async (id: string) => {
-  const [rows] = await pool.query<mysql.RowDataPacket[]>(
-    "SELECT * FROM bookings WHERE BookingID = ?",
-    [id]
-  );
-  return rows[0];
+  return await Booking.findById(id);
 };
 
 const create = async (newBookingData: IBooking) => {
-  const [result] = await pool.query<mysql.OkPacket>(
-    "INSERT INTO bookings SET ?",
-    newBookingData
-  );
-  const [rows] = await pool.query<mysql.RowDataPacket[]>(
-    "SELECT * FROM bookings WHERE BookingID = ?",
-    [result.insertId]
-  );
-  return rows[0];
+  const booking = new Booking(newBookingData);
+  await booking.save();
+  return booking;
 };
 
 const update = async (id: string, updatedData: IBooking) => {
-  await pool.query("UPDATE bookings SET ? WHERE BookingID = ?", [
-    updatedData,
-    id,
-  ]);
-  const [rows] = await pool.query<mysql.RowDataPacket[]>(
-    "SELECT * FROM bookings WHERE BookingID = ?",
-    [id]
-  );
-  return rows[0];
+  return await Booking.findByIdAndUpdate(id, updatedData, { new: true });
 };
 
 const _delete = async (id: string) => {
-  await pool.query("DELETE FROM bookings WHERE BookingID = ?", [id]);
+  await Booking.findByIdAndDelete(id);
   return "Booking Deleted";
 };
 

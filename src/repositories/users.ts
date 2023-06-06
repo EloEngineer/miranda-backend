@@ -1,19 +1,13 @@
-import { pool } from "../database/db";
-import { IUser } from "../interfaces/UserSchema";
-import mysql from "mysql2/promise";
+import User from "../models/UserSchema";
 import bcrypt from "bcrypt";
+import { IUser } from "../models/interfaces";
 
 const getAll = async () => {
-  const [rows] = await pool.query("SELECT * FROM users");
-  return rows;
+  return await User.find();
 };
 
-const getOne = async (id: number) => {
-  const [rows] = await pool.query<mysql.RowDataPacket[]>(
-    "SELECT * FROM users WHERE ID = ?",
-    [id]
-  );
-  return rows[0];
+const getOne = async (id: string) => {
+  return await User.findById(id);
 };
 
 const create = async (newUserInfo: IUser) => {
@@ -21,31 +15,26 @@ const create = async (newUserInfo: IUser) => {
   const hashedPassword = await bcrypt.hash(newUserInfo.Password, saltRounds);
   newUserInfo.Password = hashedPassword;
 
-  const [result] = await pool.query<mysql.OkPacket>(
-    "INSERT INTO users SET ?",
-    newUserInfo
-  );
-  const [rows] = await pool.query<mysql.RowDataPacket[]>(
-    "SELECT * FROM users WHERE ID = ?",
-    [result.insertId]
-  );
-  return rows[0];
+  const user = new User(newUserInfo);
+  return await user.save();
 };
 
-const update = async (updatedUser: IUser) => {
-  await pool.query("UPDATE users SET ? WHERE ID = ?", [
-    updatedUser,
-    updatedUser.ID,
-  ]);
-  const [rows] = await pool.query<mysql.RowDataPacket[]>(
-    "SELECT * FROM users WHERE ID = ?",
-    [updatedUser.ID]
-  );
-  return rows[0];
+const update = async (id: string, updatedUser: Partial<IUser>) => {
+  // Removes the password from the updated fields if it is not present
+  if (!updatedUser.Password) {
+    delete updatedUser.Password;
+  } else {
+    // If password is present, hashes the password before updating
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(updatedUser.Password, saltRounds);
+    updatedUser.Password = hashedPassword;
+  }
+
+  return await User.findByIdAndUpdate(id, updatedUser, { new: true });
 };
 
-const _delete = async (id: number) => {
-  await pool.query("DELETE FROM users WHERE ID = ?", [id]);
+const _delete = async (id: string) => {
+  await User.findByIdAndDelete(id);
   return "User Deleted";
 };
 

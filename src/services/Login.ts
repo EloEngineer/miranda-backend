@@ -6,9 +6,9 @@ import {
 } from "passport-jwt";
 import { JwtPayload } from "jsonwebtoken";
 import dotenv from "dotenv";
-import { pool } from "../database/db";
+import { connection } from "../database/db";
 import bcrypt from "bcrypt";
-import mysql from "mysql2/promise";
+import User from "../models/UserSchema";
 
 dotenv.config();
 
@@ -21,23 +21,28 @@ passport.use(
     },
     async (email: string, password: string, doneCallback) => {
       try {
-        const saltRounds = 10;
-        const hashedPassword = await bcrypt.hash(password, saltRounds);
-        // Fetch the user from your database
-        const [rows] = await pool.query<mysql.RowDataPacket[]>(
-          "SELECT * FROM users WHERE Email = ? and Password = ?",
-          [email, hashedPassword]
-        );
+        // Find user in MongoDB database
+        const user = await User.findOne({ email: email });
 
-        // If user not found or password doesn't match, return with a message
-        if (!rows.length) {
+        // If user not found, return with a message
+        if (!user) {
+          return doneCallback(null, false, {
+            message: "Incorrect credentials",
+          });
+        }
+
+        // Check password against hashed password in database
+        const match = await bcrypt.compare(password, user.Password);
+
+        // If password doesn't match, return with a message
+        if (!match) {
           return doneCallback(null, false, {
             message: "Incorrect credentials",
           });
         }
 
         // If the credentials are correct, return the user
-        return doneCallback(null, rows[0]);
+        return doneCallback(null, user);
       } catch (errorObj) {
         return doneCallback(errorObj, false);
       }

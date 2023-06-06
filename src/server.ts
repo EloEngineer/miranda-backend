@@ -9,6 +9,7 @@ import RoomRouter from "./routes/RoomRoute";
 import authRouter from "./controllers/LoginController";
 import passport from "passport";
 import "./services/Login";
+import { connection } from "./database/db";
 
 dotenv.config();
 

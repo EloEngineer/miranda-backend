@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import booking from "../repositories/booking";
-import { IBooking } from "../interfaces/BookingSchema";
+import { IBooking } from "../models/BookingSchema";
 
 const getBookings = async (_: Request, res: Response) => {
   try {

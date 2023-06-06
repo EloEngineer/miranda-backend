@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+
 const BookingSchema = new mongoose.Schema({
   BookingID: {
     type: Number,
@@ -27,4 +29,4 @@ const BookingSchema = new mongoose.Schema({
   },
 });
 
-const Booking = mongoose.model("Booking", BookingSchema);
+export default mongoose.model("Booking", BookingSchema);

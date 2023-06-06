@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import rooms from "../repositories/rooms";
-import { IRoom } from "../interfaces/RoomSchema";
+import { IRoom } from "../models/RoomSchema";
 
 const getRooms = async (_: Request, res: Response) => {
   try {

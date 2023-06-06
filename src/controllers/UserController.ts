@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import users from "../repositories/users";
-import { IUser } from "../interfaces/UserSchema";
+import { IUser } from "../models/UserSchema";
 
 const getUsers = async (_: Request, res: Response) => {
   try {

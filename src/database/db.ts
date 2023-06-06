@@ -1,11 +1,13 @@
-import mysql from "mysql2/promise";
-import dontenv from "dotenv";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
 
-dontenv.config();
+dotenv.config();
 
-export const pool = mysql.createPool({
-  host: "localhost",
-  user: "root",
-  password: process.env.DB_PASSWORD,
-  database: "database_miranda",
-});
+export const connection = async () => {
+  try {
+    await mongoose.connect(`mongodb://localhost:27017/miranda-database`);
+    console.log("Successfully connected to MongoDB");
+  } catch (error) {
+    console.error("Error connecting to MongoDB: ", error);
+  }
+};

@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+
 const RoomSchema = new mongoose.Schema({
   RoomID: {
     type: Number,
@@ -16,4 +18,4 @@ const RoomSchema = new mongoose.Schema({
   Offer: Number,
 });
 
-const Room = mongoose.model("Room", RoomSchema);
+export default mongoose.model("Room", RoomSchema);

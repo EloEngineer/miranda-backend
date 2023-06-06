@@ -1,43 +1,26 @@
-import mysql from "mysql2/promise";
-import { pool } from "../database/db";
-import { IRoom } from "../interfaces/RoomSchema";
+import Room from "../models/RoomSchema";
+import { IRoom } from "../models/interfaces";
 
 const getAll = async () => {
-  const [rows] = await pool.query<mysql.RowDataPacket[]>("SELECT * FROM rooms");
-  return rows;
+  return await Room.find();
 };
 
-const getOne = async (id: number) => {
-  const [rows] = await pool.query<mysql.RowDataPacket[]>(
-    "SELECT * FROM rooms WHERE id = ?",
-    [id]
-  );
-  return rows[0];
+const getOne = async (id: string) => {
+  return await Room.findById(id);
 };
 
 const create = async (newRoomData: IRoom) => {
-  const [result] = await pool.query<mysql.OkPacket>(
-    "INSERT INTO rooms SET ?",
-    newRoomData
-  );
-  const [rows] = await pool.query<mysql.RowDataPacket[]>(
-    "SELECT * FROM rooms WHERE id = ?",
-    [result.insertId]
-  );
-  return rows[0];
+  const room = new Room(newRoomData);
+  await room.save();
+  return room;
 };
 
-const update = async (id: number, updatedData: IRoom) => {
-  await pool.query("UPDATE rooms SET ? WHERE id = ?", [updatedData, id]);
-  const [rows] = await pool.query<mysql.RowDataPacket[]>(
-    "SELECT * FROM rooms WHERE id = ?",
-    [id]
-  );
-  return rows[0];
+const update = async (id: string, updatedData: IRoom) => {
+  return await Room.findByIdAndUpdate(id, updatedData, { new: true });
 };
 
-const _delete = async (id: number) => {
-  await pool.query("DELETE FROM rooms WHERE id = ?", [id]);
+const _delete = async (id: string) => {
+  await Room.findByIdAndDelete(id);
   return "Room Deleted";
 };
 

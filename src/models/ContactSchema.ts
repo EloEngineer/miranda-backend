@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+
 const ContactSchema = new mongoose.Schema({
   OrderID: {
     type: String,
@@ -25,4 +27,4 @@ const ContactSchema = new mongoose.Schema({
   IMG: String,
 });
 
-const Contact = mongoose.model("Contact", ContactSchema);
+export default mongoose.model("Contact", ContactSchema);
